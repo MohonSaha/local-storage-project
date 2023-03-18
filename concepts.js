@@ -18,4 +18,9 @@ const handelBookmark = (name, id, price) =>{
 
     console.log(product);
     console.log(product1);
+
+
+
+    // Console.log: Sometimes it becomes tough to find that white value we have loged that's why we can use the rule: 
+    console.log({product});
   }

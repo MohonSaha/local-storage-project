@@ -15,7 +15,7 @@ const displayProduct = (data) => {
     card.innerHTML = `
           <div class="bookmark-icon">
         
-          <i class="fa-solid fa-bookmark"></i>
+          <i onclick="handelRemovedBookmark('${product.id}')" class="fa-solid fa-bookmark"></i>
           <i onclick="handelBookmark('${product.name}', '${product.id}', '${product.price}')" class="fa-regular fa-bookmark"></i>
 
 
@@ -45,20 +45,44 @@ const displayProduct = (data) => {
 
 const handelBookmark = (name, id, price) =>{
 
-  const product = {
-    name, price, id
-  }
-  console.log(product);
+  const product = { name, price, id, bookmark: true };
+  let bookmark = [];
+    const previousBookmark = JSON.parse(localStorage.getItem('bookmark'));
+    if(previousBookmark){
+      
+      const isThisProductMarked = previousBookmark.find(pd => pd.id == id);
+
+      if(isThisProductMarked){
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'You have already added this product!',
+          footer: '<a href="">Why do I have this issue?</a>'
+        })
+      }
+      else{
+        bookmark.push(...previousBookmark, product);
+        localStorage.setItem("bookmark", JSON.stringify(bookmark));
+      }
+
+    }
+    else{
+      bookmark.push(product);
+      localStorage.setItem("bookmark", JSON.stringify(bookmark));
+    }
+  // console.log(product);
 }
 
 
 
 
-const handleRemoveBookmark = (id) => {
+const handelRemovedBookmark = (id) =>{
+  console.log(id);
   const previousBookmark = JSON.parse(localStorage.getItem("bookmark"));
-  const restOfThem = previousBookmark.filter((product) => product.id != id);
-  localStorage.setItem("bookmark", JSON.stringify(restOfThem));
-};
+  const restOfThem = previousBookmark.filter(product => product.id != id);
+  console.log(restOfThem);
+  localStorage.setItem('bookmark', JSON.stringify(restOfThem));
+}
 
 const checkBookmark = (id) => {
   const previousBookmark = JSON.parse(localStorage.getItem("bookmark"));
