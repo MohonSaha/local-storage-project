@@ -15,8 +15,8 @@ const displayProduct = (data) => {
     card.innerHTML = `
           <div class="bookmark-icon">
         
-          <i onclick="handelRemovedBookmark('${product.id}')" class="fa-solid fa-bookmark"></i>
-          <i onclick="handelBookmark('${product.name}', '${product.id}', '${product.price}')" class="fa-regular fa-bookmark"></i>
+          <i onclick="${isBookmarked ? `handelRemovedBookmark('${product.id}')` : `handelBookmark('${product.name}', '${product.id}', '${product.price}')`}" class="${isBookmarked ? "fa-solid fa-bookmark" : "fa-regular fa-bookmark"}"></i>
+
 
 
         </div>
@@ -43,40 +43,40 @@ const displayProduct = (data) => {
 // ! handle book mark
 
 
-const handelBookmark = (name, id, price) =>{
+const handelBookmark = (name, id, price) => {
 
   const product = { name, price, id, bookmark: true };
   let bookmark = [];
-    const previousBookmark = JSON.parse(localStorage.getItem('bookmark'));
-    if(previousBookmark){
-      
-      const isThisProductMarked = previousBookmark.find(pd => pd.id == id);
+  const previousBookmark = JSON.parse(localStorage.getItem('bookmark'));
+  if (previousBookmark) {
 
-      if(isThisProductMarked){
-        Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          text: 'You have already added this product!',
-          footer: '<a href="">Why do I have this issue?</a>'
-        })
-      }
-      else{
-        bookmark.push(...previousBookmark, product);
-        localStorage.setItem("bookmark", JSON.stringify(bookmark));
-      }
+    const isThisProductMarked = previousBookmark.find(pd => pd.id == id);
 
+    if (isThisProductMarked) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'You have already added this product!',
+        footer: '<a href="">Why do I have this issue?</a>'
+      })
     }
-    else{
-      bookmark.push(product);
+    else {
+      bookmark.push(...previousBookmark, product);
       localStorage.setItem("bookmark", JSON.stringify(bookmark));
     }
+
+  }
+  else {
+    bookmark.push(product);
+    localStorage.setItem("bookmark", JSON.stringify(bookmark));
+  }
   // console.log(product);
 }
 
 
 
 
-const handelRemovedBookmark = (id) =>{
+const handelRemovedBookmark = (id) => {
   console.log(id);
   const previousBookmark = JSON.parse(localStorage.getItem("bookmark"));
   const restOfThem = previousBookmark.filter(product => product.id != id);
@@ -84,15 +84,17 @@ const handelRemovedBookmark = (id) =>{
   localStorage.setItem('bookmark', JSON.stringify(restOfThem));
 }
 
-const checkBookmark = (id) => {
-  const previousBookmark = JSON.parse(localStorage.getItem("bookmark"));
 
-  const isBookmarked = previousBookmark?.find((product) => product.id == id);
+const checkBookmark = (id) => {
+  console.log(id);
+  const previousBookmark = JSON.parse(localStorage.getItem("bookmark"));
+  const isBookmarked = previousBookmark.find(product => product.id == id);
   if (isBookmarked) {
-    return true;
-  } else {
+    return true
+  }
+  else {
     return false;
   }
-};
+}
 
 loadProduct();
